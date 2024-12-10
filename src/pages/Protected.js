@@ -3,6 +3,7 @@ import { Box, CircularProgress } from "@mui/material";
 
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
+import { Navbar } from "../components/Navbar";
 
 export const Protected = () => {
   
@@ -16,6 +17,7 @@ export const Protected = () => {
 
   return (
     <Box>
+      <Navbar/>
       <Outlet />
     </Box>
   );

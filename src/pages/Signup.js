@@ -25,6 +25,7 @@ import {
   
   import axios from "axios";
   import { useMutation } from "@tanstack/react-query";
+
   
   const schema = yup.object().shape({
     name: yup
@@ -100,6 +101,7 @@ export const Signup = () => {
   
     return (
       <Box>
+      
         <ToastContainer />
         <Grid container>
           <Grid item xs={12} md={6}>

@@ -35,3 +35,14 @@
   align-items:center;
   margin: 5px 0px 20px 0px !important
 }
+
+.active{
+  text-decoration: none;
+  margin-left: 10px;
+  color: blue-violet;
+}
+.link{
+  text-decoration: none;
+  margin-left: 10px;
+  color: black;
+}
