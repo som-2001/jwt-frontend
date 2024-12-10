@@ -14,7 +14,7 @@ export const Navbar = () => {
           <NavLink to="/signin" className={({ isActive }) => isActive ? "active" : "link"}>
             Sign In
           </NavLink>
-          <NavLink to="/signup" className={({isActive})=>isActive ?"active" : "link"}>Sign Up</NavLink>
+          <NavLink to="/" className={({isActive})=>isActive ?"active" : "link"}>Sign Up</NavLink>
           <NavLink className="link">Logout</NavLink>
         </Box>
       </Toolbar>
