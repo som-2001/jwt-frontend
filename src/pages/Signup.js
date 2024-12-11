@@ -30,16 +30,18 @@ import {
   const schema = yup.object().shape({
     name: yup
       .string()
-      .trim()
-      .matches(/^[a-z" "A-Z]*$/, "only letters are allowed here")
-      .required("name is required"),
-    email: yup
-      .string()
-      .trim()
-      .test("invalidEmail", "invalid Email", (value) => {
-        return EmailValidator.validate(value);
+      .matches(/^[a-z" "A-Z]*$/, "only letters are allowed here").test("invalid_space","spaces at first won't be accepted",(value)=>{
+         if(value.startsWith(" "))return false;
+         else return true
       })
-      .required("email is required"),
+      .required("name is required"),
+      email: yup
+      .string()
+      .test('Invalid email', (value) => {
+        // Check for leading spaces and invalid email format
+        return !value?.startsWith(' ') && EmailValidator.validate(value);
+      })
+      .required('Email is required'),
     password: yup
       .string()
       .matches(/[a-z]/, "password should contain atleast one lowercase")
@@ -173,7 +175,7 @@ export const Signup = () => {
                         variant="standard"
                         label="Email"
                         {...field}
-                        type="email"
+                        type="text"
                         placeholder="john@gmail.com"
                         sx={{ width: { xs: "300px", sm: "500px", md: "400px" } }}
                         InputProps={{

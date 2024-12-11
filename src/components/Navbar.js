@@ -1,23 +1,99 @@
-import React from "react";
-import { AppBar, Toolbar, Typography,Box } from "@mui/material";
-import { NavLink } from "react-router-dom";
-import "../App.css"
+import React, { useState } from "react";
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  CircularProgress,
+} from "@mui/material";
+import { NavLink, useNavigate } from "react-router-dom";
+import "../App.css";
+import { useMutation } from "@tanstack/react-query";
+import axios from "axios";
+
 
 export const Navbar = () => {
+  const [open, setOpen] = useState(false);
+  const navigate=useNavigate();
+
+  const handleLogout = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const mutation=useMutation({
+    mutationKey:['logout'],
+    mutationFn:()=>{
+      return axios.post(`${process.env.REACT_APP_BASEURL}/logout`,{},{
+        withCredentials:true
+      });
+    },
+    onSuccess:()=>{
+      localStorage.setItem('auth',false);
+      navigate('/signin');
+    },
+    onError:(error)=>{
+      console.log(error);
+    }
+  })
+  
+  const Logout=()=>{
+    mutation.mutate();
+  }
+
+  
+  
   return (
-    <AppBar position="static" color="whitesmoke">
-      <Toolbar>
-        <Typography variant="h6" sx={{ flexGrow: 1 }}>
-          MyApp
-        </Typography>
-        <Box>
-          <NavLink to="/signin" className={({ isActive }) => isActive ? "active" : "link"}>
-            Sign In
-          </NavLink>
-          <NavLink to="/" className={({isActive})=>isActive ?"active" : "link"}>Sign Up</NavLink>
-          <NavLink className="link">Logout</NavLink>
-        </Box>
-      </Toolbar>
-    </AppBar>
+    <>
+      <AppBar position="static" color="default">
+        <Toolbar>
+          <Typography variant="h6" sx={{ flexGrow: 1 }}>
+            MyApp
+          </Typography>
+          <Box>
+            {/* <NavLink
+              to="/signin"
+              className={({ isActive }) => (isActive ? "active" : "link")}
+            >
+              Sign In
+            </NavLink>
+            <NavLink
+              to="/"
+              className={({ isActive }) => (isActive ? "active" : "link")}
+            >
+              Sign Up
+            </NavLink> */}
+            <NavLink className="link" onClick={handleLogout}>
+              Logout
+            </NavLink>
+          </Box>
+        </Toolbar>
+      </AppBar>
+      <Dialog open={open} onClose={handleClose}>
+        <DialogTitle>Logout</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Are you sure you want to logout?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} color="primary">
+            No
+          </Button>
+          <Button color="primary" onClick={Logout}>
+            {mutation.isPending?<CircularProgress size={30}/>:<span>Yes</span>}
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </>
   );
 };

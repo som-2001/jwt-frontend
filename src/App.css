@@ -1,3 +1,10 @@
+::-webkit-scrollbar{
+  width: 5px;
+}
+::-webkit-scrollbar-thumb{
+  background-color: violet;
+  border-radius: 5px;
+}
 .parentText{
   position:absolute;
   color:white;
