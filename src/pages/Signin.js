@@ -245,6 +245,7 @@ export const Signin = () => {
             >
               <GoogleLogin
                 
+                width={400}
                 onSuccess={onSuccess}
                 onError={onError}
                 containerProps={{
