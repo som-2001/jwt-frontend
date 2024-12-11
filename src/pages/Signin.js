@@ -28,16 +28,14 @@ import { useEffect, useState } from "react";
 import { GoogleLogin } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
 
-
-
 const schema = yup.object().shape({
   email: yup
-  .string()
-  .test('Invalid email', (value) => {
-    // Check for leading spaces and invalid email format
-    return !value?.startsWith(' ') && EmailValidator.validate(value);
-  })
-  .required('Email is required'),
+    .string()
+    .test("Invalid email", (value) => {
+      // Check for leading spaces and invalid email format
+      return !value?.startsWith(" ") && EmailValidator.validate(value);
+    })
+    .required("Email is required"),
   password: yup
     .string()
     .max(15, "maximum 15 characters")
@@ -57,10 +55,12 @@ export const Signin = () => {
     resolver: yupResolver(schema),
   });
 
-  useEffect(()=>{
-    console.log(localStorage.getItem('auth'));
-    localStorage.getItem('auth')==="true"? navigate("/users"): navigate("/signin")
-  },[navigate]);
+  useEffect(() => {
+    console.log(localStorage.getItem("auth"));
+    localStorage.getItem("auth") === "true"
+      ? navigate("/users")
+      : navigate("/signin");
+  }, [navigate]);
 
   const mutation = useMutation({
     mutationKey: ["login"],
@@ -136,7 +136,6 @@ export const Signin = () => {
             sx={{
               top: { xs: "17%", sm: "17%", md: "40%" },
               left: { xs: "8%", sm: "15%", md: "3%" },
-              
             }}
             className="parentText"
           >
@@ -226,31 +225,20 @@ export const Signin = () => {
               </FormControl>
             </Box>
 
-            <Button
-              type="submit"
-              className="submitbutton"
-              sx={{ width: { xs: "300px", sm: "500px", md: "400px" } }}
-            >
-              {mutation.isPending ? (
-                <CircularProgress size={30} />
-              ) : (
-                <span>Sign in </span>
-              )}
-            </Button>
-            <Box
-              sx={{
-                width: { xs: "300px", sm: "500px", md: "400px" },
-                padding:1
-              }} 
-            >
-              <GoogleLogin
-              
-                onSuccess={onSuccess}
-                onError={onError}
-                containerProps={{
-                  className: "google-login-button", 
-                }}
-              />
+            <Box className='submitContainer' sx={{flexDirection:{xs:"column",sm:"row"}, gap:{xs:"0px",sm:"10px"}}}>
+              <Button
+                type="submit"
+                className="submitbutton"
+                sx={{ width: { xs: "180px", sm: "200px", md: "200px" } }}
+              >
+                {mutation.isPending ? (
+                  <CircularProgress size={30} />
+                ) : (
+                  <span>Sign in </span>
+                )}
+              </Button>
+
+              <GoogleLogin onSuccess={onSuccess} onError={onError} />
             </Box>
           </form>
 
