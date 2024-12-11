@@ -247,6 +247,9 @@ export const Signin = () => {
                 
                 onSuccess={onSuccess}
                 onError={onError}
+                containerProps={{
+                  style: { width: "100%" }, 
+                }}
               />
             </Box>
           </form>
