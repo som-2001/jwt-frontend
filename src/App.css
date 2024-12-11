@@ -66,5 +66,7 @@
   gap:5px;
 
 }
-
+.boxShadow{
+  box-shadow: 5px -4px 11px 2px;
+}
 

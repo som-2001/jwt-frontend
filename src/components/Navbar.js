@@ -57,7 +57,7 @@ export const Navbar = () => {
   return (
     <>
       <AppBar position="static" color="default">
-        <Toolbar>
+        <Toolbar className="boxShadow">
           <Typography variant="h6" sx={{ flexGrow: 1 }}>
             MyApp
           </Typography>
