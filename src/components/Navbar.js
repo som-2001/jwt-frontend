@@ -61,19 +61,7 @@ export const Navbar = () => {
           <Typography variant="h6" sx={{ flexGrow: 1 }}>
             MyApp
           </Typography>
-          <Box>
-            {/* <NavLink
-              to="/signin"
-              className={({ isActive }) => (isActive ? "active" : "link")}
-            >
-              Sign In
-            </NavLink>
-            <NavLink
-              to="/"
-              className={({ isActive }) => (isActive ? "active" : "link")}
-            >
-              Sign Up
-            </NavLink> */}
+          <Box sx={{display:'flex'}}>
             <NavLink className="link" onClick={handleLogout}>
               <Box className="gap1">
                 <LogoutIcon />
