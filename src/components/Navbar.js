@@ -15,12 +15,12 @@ import {
 import { NavLink, useNavigate } from "react-router-dom";
 import "../App.css";
 import { useMutation } from "@tanstack/react-query";
+import LogoutIcon from "@mui/icons-material/Logout";
 import axios from "axios";
-
 
 export const Navbar = () => {
   const [open, setOpen] = useState(false);
-  const navigate=useNavigate();
+  const navigate = useNavigate();
 
   const handleLogout = () => {
     setOpen(true);
@@ -30,28 +30,30 @@ export const Navbar = () => {
     setOpen(false);
   };
 
-  const mutation=useMutation({
-    mutationKey:['logout'],
-    mutationFn:()=>{
-      return axios.post(`${process.env.REACT_APP_BASEURL}/logout`,{},{
-        withCredentials:true
-      });
+  const mutation = useMutation({
+    mutationKey: ["logout"],
+    mutationFn: () => {
+      return axios.post(
+        `${process.env.REACT_APP_BASEURL}/logout`,
+        {},
+        {
+          withCredentials: true,
+        }
+      );
     },
-    onSuccess:()=>{
-      localStorage.setItem('auth',false);
-      navigate('/signin');
+    onSuccess: () => {
+      localStorage.setItem("auth", false);
+      navigate("/signin");
     },
-    onError:(error)=>{
+    onError: (error) => {
       console.log(error);
-    }
-  })
-  
-  const Logout=()=>{
-    mutation.mutate();
-  }
+    },
+  });
 
-  
-  
+  const Logout = () => {
+    mutation.mutate();
+  };
+
   return (
     <>
       <AppBar position="static" color="default">
@@ -73,7 +75,12 @@ export const Navbar = () => {
               Sign Up
             </NavLink> */}
             <NavLink className="link" onClick={handleLogout}>
-              Logout
+              <Box className="gap1">
+                <LogoutIcon />
+                <Typography variant="h6" color="text.secondary">
+                  Logout
+                </Typography>
+              </Box>
             </NavLink>
           </Box>
         </Toolbar>
@@ -90,7 +97,11 @@ export const Navbar = () => {
             No
           </Button>
           <Button color="primary" onClick={Logout}>
-            {mutation.isPending?<CircularProgress size={30}/>:<span>Yes</span>}
+            {mutation.isPending ? (
+              <CircularProgress size={30} />
+            ) : (
+              <span>Yes</span>
+            )}
           </Button>
         </DialogActions>
       </Dialog>

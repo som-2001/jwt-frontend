@@ -53,3 +53,11 @@
   margin-left: 10px;
   color: black;
 }
+.gap1{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  margin:20px 0px 20px 0px;
+  gap:5px;
+
+}
