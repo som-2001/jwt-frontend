@@ -4,83 +4,140 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { useDispatch, useSelector } from "react-redux";
+import { cartDecreaseItem, cartIncreaseItem, intializeCart } from "../redux/slice/cartSlice";
 
 export const Cart = () => {
   
-//   const { cart,Total } = useSelector((state) => state.cart);
+  const { cart,Total } = useSelector((state) => state.cart);
 
+  const dispatch=useDispatch();
   const [total,setTotal]=useState(0);
-  const [cart,setCart]=useState([]);
+  // const [cart,setCart]=useState([]);
  
-  useEffect(()=>{
-    axios.get(`${process.env.REACT_APP_BASEURL}/getUserCart`, {
-        withCredentials: true,
-      }).then(res=>{
-        console.log(res.data.cart_items);
-        setCart(res.data.cart_items)
-        const total = res.data.cart_items.reduce((acc, item) => {
-            return acc + (Number(item.price) * Number(item.count));
-          }, 0);
-          
-          // Set the total
-          setTotal(total);
+  // useEffect(()=>{
+  //   axios.get(`${process.env.REACT_APP_BASEURL}/getUserCart`, {
+  //       withCredentials: true,
+  //     }).then(res=>{
+  //       console.log(res.data.cart_items);
+  //       setCart(res.data.cart_items)
+  //       const total = res.data.cart_items.reduce((acc, item) => {
+  //           return acc + (Number(item.price) * Number(item.count));
+  //         }, 0);
+  //         setTotal(total);
        
-      }).catch(error=>{
-        console.log(error)
-      })
-  },[]);
+  //     }).catch(error=>{
+  //       console.log(error)
+  //     })
+  // },[]);
 
-  const increaseItem = (id, actualPrice) => {
-      axios.post(
+  const { data, isSuccess } = useQuery({
+    queryKey: ["fetch_cart_product"],
+    queryFn: () => {
+      return axios.get(`${process.env.REACT_APP_BASEURL}/getUserCart`, {
+        withCredentials: true,
+      });
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+  });
+  
+  useEffect(() => {
+    if (isSuccess) {
+      // console.log(data.data.cart_items);
+      // setCart(data.data.cart_items);
+      dispatch(intializeCart(data.data.cart_items));
+  
+      // Calculate total
+      const total = data.data.cart_items.reduce((acc, item) => {
+        return acc + Number(item.price) * Number(item.count);
+      }, 0);
+
+      setTotal(total);
+    }
+  }, [dispatch,isSuccess, data]); // Dependencies
+  
+
+  const mutation=useMutation({
+    mutationKey:["product_cartincrease"],
+    mutationFn:(data)=>{
+      return  axios.post(
         `${process.env.REACT_APP_BASEURL}/cartincrease`,
-        { id, actualPrice },
+          data,
         {
           withCredentials: true,
-        }
-      );
-  
-      setCart((cartItem) =>
-        cartItem.map((item) =>
-          String(item.id) === String(id)
-            ? {
-                ...item,
-                count: item.count ? item.count + 1 : 1, // Increment count or set to 1
-                price: parseFloat(
-                  (
-                    Number(item.actualPrice || 0) *
-                    ((item.count || 0) + 1)
-                  ).toFixed(2) // Ensure valid count for price calculation
-                ),
-              }
-            : item
-        )
-      );
-      setTotal((prev)=>prev+Number(actualPrice))
-      
-    };
-    const decreaseItem = (id, actualPrice) => {
-      axios.post(
+        })
+    },
+    onSuccess:(res)=>{
+      // setCart((cartItem) =>
+      //   cartItem.map((item) =>
+      //     String(item.id) === String(res.data.cartItem.id)
+      //       ? {
+      //           ...item,
+      //           count: item.count ? item.count + 1 : 1, 
+      //           price: parseFloat(
+      //             (
+      //               Number(item.actualPrice || 0) *
+      //               ((item.count || 0) + 1)
+      //             ).toFixed(2) 
+      //           ),
+      //         }
+      //       : item
+      //   )
+      // );
+      // setTotal((prev)=>prev+Number(res.data.cartItem.actualPrice))
+      dispatch(cartIncreaseItem(res.data));
+    }
+  })
+
+  const decreaseMutation=useMutation({
+    mutationKey:["product_cartdecrease"],
+    mutationFn:(data)=>{
+      return  axios.post(
         `${process.env.REACT_APP_BASEURL}/cartdecrease`,
-        { id, actualPrice },
+          data,
         {
           withCredentials: true,
-        }
-      );
+        })
+    },
+    onSuccess:(res)=>{
+    //   setCart((cartItem) =>
+    //     cartItem
+    //     .map((item) =>
+    //       String(item.id) === String(res.data.cartItem.id)
+    //         ? item.count > 1 ? {
+    //               ...item,
+    //               count: item.count - 1,
+    //               price: (item.price - item.actualPrice).toFixed(2), 
+    //             }
+    //           : 'remove'
+    //         : item
+    //     ).filter((item) => item !== 'remove')
+    // )
+    // setTotal((prev)=>prev-Number(res.data.cartItem.actualPrice))
+    dispatch(cartDecreaseItem(res.data));
+    }
+  })
+  const increaseItem = (id, actualPrice) => {
+    
+    const payload={
+      id:id,
+      actualPrice:actualPrice
+    }
+      mutation.mutate(payload);
+     
+    };
+
+    const decreaseItem = (id, actualPrice) => {
+      
   
-      setCart((cartItem) =>
-          cartItem
-          .map((item) =>
-            item.id === id
-              ? item.count > 1 ? {
-                    ...item,
-                    count: item.count - 1,
-                    price: (item.price - item.actualPrice).toFixed(2), 
-                  }
-                : 'remove'
-              : item
-          ).filter((item) => item !== 'remove')
-      )
-      setTotal((prev)=>prev-Number(actualPrice))
+      const payload={
+        id:id,
+        actualPrice:actualPrice
+      }
+      decreaseMutation.mutate(payload);
     };
 
   return (
@@ -223,7 +280,7 @@ export const Cart = () => {
             <Divider sx={{ my: 2 }} />
             <Box className={styles.body1}>
               <span>subtotal</span>
-              <span>{Math.abs(total.toFixed(2))}</span>
+              <span>{Math.abs(Total.toFixed(2))}</span>
             </Box>
             <Box className={styles.body1}>
               <span>Shipping</span>
@@ -231,9 +288,9 @@ export const Cart = () => {
             </Box>
             <Box className={styles.body1}>
               <span>Total(Tax incl.)</span>
-              <span>${Math.abs(total.toFixed(2))}</span>
+              <span>${Math.abs(Total.toFixed(2))}</span>
             </Box>
-            <Button>${Math.abs(total.toFixed(2))}</Button>
+            <Button>${Math.abs(Total.toFixed(2))}</Button>
           </Box>
         </Grid>
       </Grid>

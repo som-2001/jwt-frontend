@@ -14,7 +14,7 @@ import {
   import SellIcon from "@mui/icons-material/Sell";
   import { Navigate, useParams } from "react-router-dom";
   import { ProductCards } from "../components/ProductCards";
-  import { useQuery } from "@tanstack/react-query";
+  import { useMutation, useQuery } from "@tanstack/react-query";
   import { useEffect } from "react";
   
   export const ViewProduct = () => { 
@@ -43,6 +43,25 @@ import {
       
     })
 
+    const mutation = useMutation({
+      mutationKey: ["add_to_cart"],
+      mutationFn: (data) => {
+        return axios.post(
+          `${process.env.REACT_APP_BASEURL}/addtocart`,
+          data ,
+          {
+            withCredentials: true,
+          }
+        );
+      },
+      onSuccess: () => {
+        refetch();
+      },
+      onError: (error) => {
+        console.log(error);
+      },
+    });
+
     const {data,refetch }=useQuery({
         queryKey:['cart_id'],
         queryFn:()=>{
@@ -57,9 +76,8 @@ import {
     if(isError|| error1) return <Navigate to='/error'/>
   
     const addToCart = async (data) => {
-        try {
-          await axios.post(
-            `${process.env.REACT_APP_BASEURL}/addtocart`,
+        
+         const payload=
             {
               id: id,
               count: 1,
@@ -69,16 +87,8 @@ import {
               actualPrice: data.price,
               price: data.price,
               description: data.description,
-            },
-            {
-              withCredentials: true,
             }
-          )
-          await refetch();
-        } catch (error) {
-          console.error("Error adding to cart:", error);
-        }
-
+            mutation.mutate(payload);
       };
    
     return (
