@@ -83,7 +83,7 @@ export const Signup = () => {
       onSuccess: (user) => {
         console.log(user);
         toast.success("Registration successful");
-      
+        navigate("/signin")
       },
       onError: (error) => {
         console.error("Registration failed:", error);
