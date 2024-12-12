@@ -161,7 +161,7 @@ export const Cart = () => {
                     component="div"
                     sx={{ color: "green" }}
                   >
-                    ${item?.actualPrice*item.count}
+                    ${(item?.actualPrice*item.count).toFixed(2)}
                   </Typography>
 
                   <Typography
@@ -223,7 +223,7 @@ export const Cart = () => {
             <Divider sx={{ my: 2 }} />
             <Box className={styles.body1}>
               <span>subtotal</span>
-              <span>{total}</span>
+              <span>{Math.abs(total.toFixed(2))}</span>
             </Box>
             <Box className={styles.body1}>
               <span>Shipping</span>
@@ -231,9 +231,9 @@ export const Cart = () => {
             </Box>
             <Box className={styles.body1}>
               <span>Total(Tax incl.)</span>
-              <span>${total}</span>
+              <span>${Math.abs(total.toFixed(2))}</span>
             </Box>
-            <Button>${total}</Button>
+            <Button>${Math.abs(total.toFixed(2))}</Button>
           </Box>
         </Grid>
       </Grid>

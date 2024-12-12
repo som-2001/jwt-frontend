@@ -59,7 +59,7 @@ const addToCart = async (data) => {
     await axios.post(
       `${process.env.REACT_APP_BASEURL}/addtocart`,
       {
-        id: data.id,
+        id: String(data.id),
         count: 1,
         title: data.title,
         image: data.image,
