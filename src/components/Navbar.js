@@ -11,16 +11,31 @@ import {
   DialogContentText,
   DialogTitle,
   CircularProgress,
+  IconButton,
 } from "@mui/material";
 import { NavLink, useNavigate } from "react-router-dom";
 import "../App.css";
 import { useMutation } from "@tanstack/react-query";
 import LogoutIcon from "@mui/icons-material/Logout";
 import axios from "axios";
+import Badge from "@mui/material/Badge";
+import { styled } from "@mui/material/styles";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import InventoryIcon from '@mui/icons-material/Inventory';
+
+const StyledBadge = styled(Badge)(({ theme }) => ({
+  "& .MuiBadge-badge": {
+    right: -3,
+    top: 13,
+    border: `2px solid ${theme.palette.background.paper}`,
+    padding: "0 4px",
+  },
+}));
 
 export const Navbar = () => {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
+  
 
   const handleLogout = () => {
     setOpen(true);
@@ -61,11 +76,25 @@ export const Navbar = () => {
           <Typography variant="h6" sx={{ flexGrow: 1 }}>
             MyApp
           </Typography>
-          <Box sx={{display:'flex'}}>
+          <NavLink className="link" to="/users" title="products" > 
+             <InventoryIcon sx={{color:"rgb(0 0 0 / 54%)"}}/>
+          </NavLink>
+
+          <NavLink className="link" to="/cart">
+           
+              <IconButton aria-label="cart">
+                <StyledBadge color="secondary">
+                  <ShoppingCartIcon />
+                </StyledBadge>
+              </IconButton>
+            
+          </NavLink>
+
+          <Box sx={{ display: "flex" }}>
             <NavLink className="link" onClick={handleLogout}>
               <Box className="gap1">
                 <LogoutIcon />
-                <Typography variant="h6" color="text.secondary">
+                <Typography variant="body1" color="text.secondary">
                   Logout
                 </Typography>
               </Box>

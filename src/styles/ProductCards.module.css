@@ -1,0 +1,26 @@
+.parentGrid{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    flex-direction:column
+}
+.image{
+    width:300px;
+    height:300px;
+    
+}
+.price{
+    display:flex;
+    flex-direction:row;
+    gap:20px
+}
+.center{
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 15%;
+    margin-bottom: 15%;
+    
+}

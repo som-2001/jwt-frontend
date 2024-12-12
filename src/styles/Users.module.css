@@ -63,3 +63,12 @@
     margin:20px 0px 20px 0px;
     width:280px
 }
+.btn{
+    border-radius: 20px !important;
+    width: 100px;
+}
+.btn1{
+    border-radius: 20px !important;
+    width: 150px;
+    margin-left: 10px !important;
+}

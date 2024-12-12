@@ -11,14 +11,18 @@ import {
   TextField,
   InputAdornment,
   Chip,
+  Button,
 } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import styles from "../styles/Users.module.css";
 import { SearchSharp } from "@mui/icons-material";
+import { useNavigate } from "react-router-dom";
+
 
 export const Users = () => {
   const [draggedIndex, setDraggaedIndex] = useState(null);
   const [input, setInput] = useState("");
+  const navigate=useNavigate();
   const { data, isError, isLoading } = useQuery({
     queryKey: ["products"],
     queryFn: async () => {
@@ -26,6 +30,17 @@ export const Users = () => {
       return response.data;
     },
   });
+  const {data:data1,refetch }=useQuery({
+    queryKey:['cart_id'],
+    queryFn:()=>{
+        return axios.get(`${process.env.REACT_APP_BASEURL}/getCartId`,{
+            withCredentials:true
+        })
+      
+    },
+    select:(data)=>data.data 
+})
+console.log(data1);
 
   if (isLoading) {
     return (
@@ -38,6 +53,31 @@ export const Users = () => {
   if (isError) {
     return <h1>Error loading products...</h1>;
   }
+ 
+const addToCart = async (data) => {
+  try {
+    await axios.post(
+      `${process.env.REACT_APP_BASEURL}/addtocart`,
+      {
+        id: data.id,
+        count: 1,
+        title: data.title,
+        image: data.image,
+        category: data.category,
+        actualPrice: data.price,
+        price: data.price,
+        description: data.description,
+      },
+      {
+        withCredentials: true,
+      }
+    )
+    await refetch();
+  } catch (error) {
+    console.error("Error adding to cart:", error);
+  }
+
+};
 
   const onDragStart = (index) => {
     setDraggaedIndex(index);
@@ -61,6 +101,9 @@ export const Users = () => {
     return item.title.toLowerCase().includes(input.toLowerCase());
   });
 
+  const handleNavigate=(id,category)=>{
+    navigate(`/viewproduct/${id}/${category}`)
+  }
   return (
     <Box className={styles.parent}>
       <Box className={styles.search}>
@@ -127,6 +170,12 @@ export const Users = () => {
                       ? `${product.description.substring(0, 100)}...`
                       : product.description}
                   </Typography>
+
+                  <Button variant="contained" className={styles.btn} onClick={(e)=>handleNavigate(product.id,product.category)} >view</Button>
+
+                  <Button variant="contained" className={styles.btn1}
+                  disabled={data1?.ids?.map(String).includes(product?.id?.toString())}
+                  onClick={(e)=>addToCart(product)} >Add to cart</Button>
                 </CardContent>
               </Card>
             </Grid>

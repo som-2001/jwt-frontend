@@ -1,20 +1,20 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-// import reportWebVitals from './reportWebVitals';
-import {QueryClient,QueryClientProvider} from '@tanstack/react-query';
-import { GoogleOAuthProvider } from '@react-oauth/google';
+import React from "react";
+import ReactDOM from "react-dom/client";
+import "./index.css";
+import App from "./App";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
-const queryClient=new QueryClient();
-const root = ReactDOM.createRoot(document.getElementById('root'));
-console.log(process.env.REACT_APP_CLIENT_ID)
+
+const queryClient = new QueryClient();
+const root = ReactDOM.createRoot(document.getElementById("root"));
+
 root.render(
   <React.StrictMode>
     <GoogleOAuthProvider clientId={process.env.REACT_APP_CLIENT_ID}>
-    <QueryClientProvider client={queryClient}>
-    <App />
-    </QueryClientProvider>
+      <QueryClientProvider client={queryClient}>
+          <App />
+      </QueryClientProvider>
     </GoogleOAuthProvider>
   </React.StrictMode>
 );
