@@ -16,9 +16,13 @@ import {
   import { ProductCards } from "../components/ProductCards";
   import { useMutation, useQuery } from "@tanstack/react-query";
   import { useEffect } from "react";
-  
+  import {useDispatch} from 'react-redux';
+  import {addToCart1} from '../redux/slice/cartSlice.js';
+
   export const ViewProduct = () => { 
     const { id, category } = useParams();
+    const dispatch=useDispatch();
+
 
     useEffect(()=>{
   
@@ -89,6 +93,7 @@ import {
               description: data.description,
             }
             mutation.mutate(payload);
+            dispatch(addToCart1());
       };
    
     return (
@@ -118,10 +123,10 @@ import {
               </Typography>
               <Box className={styles.childGrid3}>
                 <Stack direction="row">
-                  <Chip icon={<StarIcon />} label="5" />
+                  <Chip icon={<StarIcon />} label={result?.rating?.rate} />
                 </Stack>
                 <Typography variant="body2">
-                  5,453 Ratings & 903 Reviews
+                   {(9.5*result?.rating?.count)} Ratings & {result?.rating?.count} Reviews
                 </Typography>
               </Box>
               <Typography variant="body2" color="red" sx={{ my: 1 }}>

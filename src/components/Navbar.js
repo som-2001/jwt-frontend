@@ -20,6 +20,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import axios from "axios";
 import Badge from "@mui/material/Badge";
 import { styled } from "@mui/material/styles";
+import {useSelector} from 'react-redux';
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import InventoryIcon from '@mui/icons-material/Inventory';
 
@@ -35,7 +36,7 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
 export const Navbar = () => {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
-  
+  const {cart_length}=useSelector((state)=>state.cart);
 
   const handleLogout = () => {
     setOpen(true);
@@ -74,16 +75,21 @@ export const Navbar = () => {
       <AppBar position="static" color="default">
         <Toolbar className="boxShadow">
           <Typography variant="h6" sx={{ flexGrow: 1 }}>
-            MyApp
+            MyStore
           </Typography>
           <NavLink className="link" to="/users" title="products" > 
-             <InventoryIcon sx={{color:"rgb(0 0 0 / 54%)"}}/>
+             
+             <IconButton aria-label="cart">
+                <StyledBadge badgeContent={20} color="secondary">
+                <InventoryIcon sx={{color:"rgb(0 0 0 / 54%)"}}/>
+                </StyledBadge>
+              </IconButton>
           </NavLink>
 
           <NavLink className="link" to="/cart">
            
               <IconButton aria-label="cart">
-                <StyledBadge color="secondary">
+                <StyledBadge badgeContent={cart_length} color="secondary">
                   <ShoppingCartIcon />
                 </StyledBadge>
               </IconButton>

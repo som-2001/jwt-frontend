@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   cart: [],
-  cart_id: [],
+  cart_length:0,
   Total: 0,
 };
 
@@ -10,6 +10,12 @@ const cartSlice = createSlice({
   name: "cart",
   initialState,
   reducers: {
+    initializeCartLength:(state,action)=>{
+      state.cart_length=action.payload.length
+    },
+    addToCart1:(state,action)=>{
+      state.cart_length+=1;
+    },
     intializeCart:(state,action)=>{
       
         state.cart=action.payload;
@@ -17,15 +23,10 @@ const cartSlice = createSlice({
           return acc + Number(item.price) * Number(item.count);
         },0);
     },
-    addCart: (state, action) => {
-      state.cart = state.cart_id.includes(action.payload.id)
-        ? state.cart
-        : [...state.cart, action.payload];
-      state.cart_id = [...state.cart_id, action.payload.id];
-      state.Total = state.Total + action.payload.price;
-    },
-    cartIncreaseItem: (state, action) => {
     
+    cartIncreaseItem: (state, action) => {
+      
+     
       state.cart = state.cart.map((item) =>
         Number(item.id) === Number(action.payload.cartItem.id)
           ? {
@@ -40,8 +41,6 @@ const cartSlice = createSlice({
             }
           : item
       );
-    
-      // Update the total price
       state.Total = parseFloat(
         (state.Total + Number(action.payload.cartItem.actualPrice)).toFixed(2)
       );
@@ -49,13 +48,12 @@ const cartSlice = createSlice({
     
     cartDecreaseItem: (state, action) => {
       console.log("Action Payload:", action.payload);
-    
-      // Update cart items
+      state.cart_length-=1;
       state.cart = state.cart
         .map((item) => {
           if (String(item.id) === String(action.payload.cartItem.id)) {
             if (item.count > 1) {
-              // Decrease the count and update the price
+              
               return {
                 ...item,
                 count: item.count - 1,
@@ -64,21 +62,21 @@ const cartSlice = createSlice({
                 ),
               };
             } else {
-              // Mark for removal by returning `undefined`
+            
               return undefined;
             }
           }
-          // Keep other items unchanged
+        
           return item;
         })
-        .filter((item) => item !== undefined); // Remove items marked for deletion
+        .filter((item) => item !== undefined); 
     
-      // Update total price
+     
       state.Total = parseFloat(
         (state.Total - Number(action.payload.cartItem.actualPrice)).toFixed(2)
       );
     
-      // Debugging logs
+      
       console.log("Updated Cart:", state.cart);
       console.log("Updated Total:", state.Total);
     }    
@@ -87,7 +85,7 @@ const cartSlice = createSlice({
   },
 });
 
-export const {intializeCart, addCart, cartIncreaseItem, cartDecreaseItem } =
+export const {addToCart1,initializeCartLength,intializeCart, addCart, cartIncreaseItem, cartDecreaseItem } =
   cartSlice.actions;
 
 export default cartSlice.reducer;

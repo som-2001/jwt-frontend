@@ -6,6 +6,7 @@ import {
   CardContent,
   CardMedia,
   Typography,
+  Stack,
   CircularProgress,
   Grid,
   TextField,
@@ -17,14 +18,31 @@ import { useMutation, useQuery, useInfiniteQuery } from "@tanstack/react-query";
 import styles from "../styles/Users.module.css";
 import { SearchSharp } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
+import {createTheme,ThemeProvider} from '@mui/material';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import {useDispatch} from 'react-redux';
+import {addToCart1} from '../redux/slice/cartSlice.js';
+import StarIcon from "@mui/icons-material/Star";
 
 export const Users = () => {
-  const [draggedIndex, setDraggedIndex] = useState(null);
+ 
   const [input, setInput] = useState("");
   const navigate = useNavigate();
   const loadMoreRef = useRef(null);
+  const dispatch=useDispatch();
 
-  // Infinite query to fetch data page-by-page
+  const theme = createTheme({
+    breakpoints: {
+      values: {
+        xss: 0,
+        xs:350,    
+        sm: 826,  
+        md: 1196,  
+        lg: 1536, 
+        custom: 1800 
+      },
+    },
+  });
   const {
     data,
     isError,
@@ -36,11 +54,11 @@ export const Users = () => {
     queryKey: ["infiniteproducts"],
     queryFn: async ({ pageParam = 1 }) => {
       const response = await axios.get(
-        `https://fakestoreapi.com/products?limit=8&page=${pageParam}`
+        `${process.env.REACT_APP_BASEURL}/fetchProducts?limit=8&page=${pageParam}`
       );
       return response.data;
     },
-    getNextPageParam: (_, pages) => pages.length + 1, // Increment page number
+    getNextPageParam: (_, pages) => pages.length + 1, 
   });
 
   const mutation = useMutation({
@@ -75,16 +93,17 @@ export const Users = () => {
           fetchNextPage();
         }
       },
-      { threshold: 0.1 }
+      { threshold: 0.8 }
     );
 
-    if (loadMoreRef.current) {
-      observer.observe(loadMoreRef.current);
+    let loadRef=loadMoreRef.current
+    if (loadRef) {
+      observer.observe(loadRef);
     }
 
     return () => {
-      if (loadMoreRef.current) {
-        observer.unobserve(loadMoreRef.current);
+      if (loadRef) {
+        observer.unobserve(loadRef);
       }
     };
   }, [fetchNextPage, hasNextPage]);
@@ -113,43 +132,35 @@ export const Users = () => {
       description: data.description,
     };
     mutation.mutate(payload);
-  };
-
-  const onDragStart = (index) => {
-    setDraggedIndex(index);
-  };
-
-  const onDragOver = (e) => {
-    e.preventDefault();
-  };
-
-  const onDrop = (index) => {
-    if (draggedIndex === null) return;
-    const [draggedItem] = data.pages.flat().splice(draggedIndex, 1);
-    data.pages.flat().splice(index, 0, draggedItem);
-    setDraggedIndex(null);
+    dispatch(addToCart1());
   };
 
   const handleSearch = (e) => {
     setInput(e.target.value);
   };
 
-  const filteredData = data.pages.flat().filter((item) =>
+  const filteredData = data?.pages
+  .flatMap((page)=>page.products)
+  .filter((item) =>
     item.title.toLowerCase().includes(input.toLowerCase())
   );
+
 
   const handleNavigate = (id, category) => {
     navigate(`/viewproduct/${id}/${category}`);
   };
 
+  
+
   return (
+    <ThemeProvider theme={theme}>
     <Box className={styles.parent}>
       <Box className={styles.search}>
         <Typography
           variant="h4"
           gutterBottom
           color="text.secondary"
-          sx={{ my: 4, fontSize: { xs: "1.2rem", sm: "1.9rem" } }}
+          sx={{ my: 4, fontSize: { xss: "1.2rem", sm: "1.9rem" } }}
         >
           Product List
         </Typography>
@@ -160,7 +171,7 @@ export const Users = () => {
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
-                <SearchSharp />
+                <SearchSharp sx={{cursor:"pointer"}} />
               </InputAdornment>
             ),
           }}
@@ -168,16 +179,13 @@ export const Users = () => {
         />
       </Box>
 
-      <Grid container spacing={3} className={styles.parentGrid}>
+      <Grid container spacing={2} className={styles.parentGrid}>
         {filteredData.length > 0 ? (
           filteredData.map((product, index) => (
-            <Grid item xs={12} sm={6} md={4} lg={3} className={styles.grid} key={index}>
+            <Grid item xss={12} xs={12} sm={6} md={4} lg={3} className={styles.grid} key={index}>
               <Card
-                className={draggedIndex === index ? styles.draggedCard : styles.card}
-                onDragStart={(e) => onDragStart(index)}
-                draggable
-                onDrop={(e) => onDrop(index)}
-                onDragOver={onDragOver}
+                className={styles.card}
+                sx={{width:{xss:"310px",xs:"330px",sm:"390px",md:"360px",lg:"370px"}}}
               >
                 <CardMedia
                   component="img"
@@ -186,7 +194,7 @@ export const Users = () => {
                   alt={product.title}
                   sx={{ objectFit: "contain", marginBottom: "10px" }}
                 />
-                <CardContent sx={{ flexGrow: 1, backgroundColor: "#ffece0" }}>
+                <CardContent sx={{ flexGrow: 1, backgroundColor: "#f9f9f8" }}>
                   <Typography variant="h6" component="div" gutterBottom>
                     {product?.title?.length > 20
                       ? `${product.title.substring(0, 20)}...`
@@ -204,7 +212,14 @@ export const Users = () => {
                       ? `${product.description.substring(0, 100)}...`
                       : product.description}
                   </Typography>
+                
+                <Box sx={{marginBottom:"20px"}}>
+                  <Stack direction="row">
+                  <Chip icon={<StarIcon sx={{color:"green"}}/>} label={product?.rating?.rate} />
+                  </Stack>
+                </Box> 
 
+                <Box className={styles.grid}>
                   <Button
                     variant="contained"
                     className={styles.btn}
@@ -215,12 +230,13 @@ export const Users = () => {
 
                   <Button
                     variant="contained"
-                    className={styles.btn1}
+                    className={data1?.ids?.map(String).includes(product?.id?.toString())?styles.active:styles.btn1}
                     disabled={data1?.ids?.map(String).includes(product?.id?.toString())}
                     onClick={(e) => addToCart(product)}
                   >
-                    Add to cart
+                    <ShoppingCartIcon sx={{marginLeft:'5px'}}/>
                   </Button>
+                </Box>  
                 </CardContent>
               </Card>
             </Grid>
@@ -233,10 +249,10 @@ export const Users = () => {
           </Box>
         )}
       </Grid>
-
-      <Box ref={loadMoreRef} className={styles.loader}>
+      <Box ref={loadMoreRef} className={styles.infiniteScrolling}>
         {isFetchingNextPage && <CircularProgress />}
       </Box>
     </Box>
+    </ThemeProvider>
   );
 };

@@ -1,7 +1,7 @@
 import { Box, Button, Card, CardContent, CardMedia, Divider, Grid, Typography } from "@mui/material";
 import styles from "../styles/Cart.module.css";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -13,24 +13,6 @@ export const Cart = () => {
   const { cart,Total } = useSelector((state) => state.cart);
 
   const dispatch=useDispatch();
-  const [total,setTotal]=useState(0);
-  // const [cart,setCart]=useState([]);
- 
-  // useEffect(()=>{
-  //   axios.get(`${process.env.REACT_APP_BASEURL}/getUserCart`, {
-  //       withCredentials: true,
-  //     }).then(res=>{
-  //       console.log(res.data.cart_items);
-  //       setCart(res.data.cart_items)
-  //       const total = res.data.cart_items.reduce((acc, item) => {
-  //           return acc + (Number(item.price) * Number(item.count));
-  //         }, 0);
-  //         setTotal(total);
-       
-  //     }).catch(error=>{
-  //       console.log(error)
-  //     })
-  // },[]);
 
   const { data, isSuccess } = useQuery({
     queryKey: ["fetch_cart_product"],
@@ -46,18 +28,10 @@ export const Cart = () => {
   
   useEffect(() => {
     if (isSuccess) {
-      // console.log(data.data.cart_items);
-      // setCart(data.data.cart_items);
+      
       dispatch(intializeCart(data.data.cart_items));
-  
-      // Calculate total
-      const total = data.data.cart_items.reduce((acc, item) => {
-        return acc + Number(item.price) * Number(item.count);
-      }, 0);
-
-      setTotal(total);
     }
-  }, [dispatch,isSuccess, data]); // Dependencies
+  }, [dispatch,isSuccess, data]);
   
 
   const mutation=useMutation({
@@ -71,23 +45,7 @@ export const Cart = () => {
         })
     },
     onSuccess:(res)=>{
-      // setCart((cartItem) =>
-      //   cartItem.map((item) =>
-      //     String(item.id) === String(res.data.cartItem.id)
-      //       ? {
-      //           ...item,
-      //           count: item.count ? item.count + 1 : 1, 
-      //           price: parseFloat(
-      //             (
-      //               Number(item.actualPrice || 0) *
-      //               ((item.count || 0) + 1)
-      //             ).toFixed(2) 
-      //           ),
-      //         }
-      //       : item
-      //   )
-      // );
-      // setTotal((prev)=>prev+Number(res.data.cartItem.actualPrice))
+      
       dispatch(cartIncreaseItem(res.data));
     }
   })
@@ -103,20 +61,6 @@ export const Cart = () => {
         })
     },
     onSuccess:(res)=>{
-    //   setCart((cartItem) =>
-    //     cartItem
-    //     .map((item) =>
-    //       String(item.id) === String(res.data.cartItem.id)
-    //         ? item.count > 1 ? {
-    //               ...item,
-    //               count: item.count - 1,
-    //               price: (item.price - item.actualPrice).toFixed(2), 
-    //             }
-    //           : 'remove'
-    //         : item
-    //     ).filter((item) => item !== 'remove')
-    // )
-    // setTotal((prev)=>prev-Number(res.data.cartItem.actualPrice))
     dispatch(cartDecreaseItem(res.data));
     }
   })
@@ -131,7 +75,6 @@ export const Cart = () => {
     };
 
     const decreaseItem = (id, actualPrice) => {
-      
   
       const payload={
         id:id,
