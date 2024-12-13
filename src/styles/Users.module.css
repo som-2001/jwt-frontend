@@ -35,7 +35,10 @@
     flex-direction: column
 }
 .parentGrid{
+    width: 300px;
     margin-bottom: 20px;
+    justify-content: center;
+    align-items: center;
 }
 
 .draggedCard {
