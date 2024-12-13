@@ -4,12 +4,16 @@ const initialState = {
   cart: [],
   cart_length:0,
   Total: 0,
+  search:""
 };
 
 const cartSlice = createSlice({
   name: "cart",
   initialState,
   reducers: {
+    searchProduct:(state,action)=>{
+      state.search=action.payload;
+    },
     initializeCartLength:(state,action)=>{
       state.cart_length=action.payload.length
     },
@@ -85,7 +89,7 @@ const cartSlice = createSlice({
   },
 });
 
-export const {addToCart1,initializeCartLength,intializeCart, addCart, cartIncreaseItem, cartDecreaseItem } =
+export const {searchProduct,addToCart1,initializeCartLength,intializeCart, addCart, cartIncreaseItem, cartDecreaseItem } =
   cartSlice.actions;
 
 export default cartSlice.reducer;

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import axios from "axios";
 import {
   Box,
@@ -20,13 +20,34 @@ import { SearchSharp } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import {createTheme,ThemeProvider} from '@mui/material';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import {useDispatch} from 'react-redux';
-import {addToCart1} from '../redux/slice/cartSlice.js';
+import {useDispatch, useSelector} from 'react-redux';
+import {addToCart1, searchProduct} from '../redux/slice/cartSlice.js';
 import StarIcon from "@mui/icons-material/Star";
 
-export const Users = () => {
+
+function useDebouncedValue(value, delay) {
+  const [debouncedValue, setDebouncedValue] = useState(value);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [value, delay]);
+
+  return debouncedValue;
+}
+
+
+export const Users = React.memo(() => {
  
-  const [input, setInput] = useState("");
+  const inputRef=useRef(null);
+  const focusRef=useRef(null);
+  const {search}=useSelector(state=>state.cart);
+  const debouncedInput = useDebouncedValue(search, 500);
   const navigate = useNavigate();
   const loadMoreRef = useRef(null);
   const dispatch=useDispatch();
@@ -43,6 +64,15 @@ export const Users = () => {
       },
     },
   });
+
+
+  const fetchProducts = useCallback(async ({ pageParam = 1 }) => {
+    const response = await axios.get(
+      `${process.env.REACT_APP_BASEURL}/fetchProducts?limit=8&page=${pageParam}&search=${debouncedInput}`
+    );
+    return response.data;
+  }, [debouncedInput]);
+
   const {
     data,
     isError,
@@ -51,15 +81,27 @@ export const Users = () => {
     hasNextPage,
     isFetchingNextPage,
   } = useInfiniteQuery({
-    queryKey: ["infiniteproducts"],
-    queryFn: async ({ pageParam = 1 }) => {
-      const response = await axios.get(
-        `${process.env.REACT_APP_BASEURL}/fetchProducts?limit=8&page=${pageParam}`
-      );
-      return response.data;
+    queryKey: ["infiniteproducts",debouncedInput],
+    queryFn:fetchProducts,
+    getNextPageParam: (lastPage, pages) => {
+      
+      if (lastPage.totalPages > pages.length) {
+        return pages.length + 1; 
+      }
+      return undefined;
     },
-    getNextPageParam: (_, pages) => pages.length + 1, 
+    staleTime: 1000 * 60 * 5, 
+    cacheTime: 1000 * 60 * 10, 
+   
   });
+
+
+  useEffect(() => {
+    if (focusRef.current) {
+      focusRef.current.focus();
+    }
+  }, [data,debouncedInput]); // Refocus when data changes
+  
 
   const mutation = useMutation({
     mutationKey: ["add_to_cart"],
@@ -136,14 +178,15 @@ export const Users = () => {
   };
 
   const handleSearch = (e) => {
-    setInput(e.target.value);
+    inputRef.current=e.target.value;
+    dispatch(searchProduct(e.target.value));
   };
 
-  const filteredData = data?.pages
-  .flatMap((page)=>page.products)
-  .filter((item) =>
-    item.title.toLowerCase().includes(input.toLowerCase())
-  );
+  // const filteredData = data?.pages
+  // .flatMap((page)=>page.products)
+  // .filter((item) =>
+  //   item.title.toLowerCase().includes(input.toLowerCase())
+  // );
 
 
   const handleNavigate = (id, category) => {
@@ -167,6 +210,8 @@ export const Users = () => {
         <TextField
           type="text"
           placeholder="Search something..."
+          inputRef={focusRef}
+          value={search}
           sx={{ width: { xs: "200px", sm: "400px" } }}
           InputProps={{
             startAdornment: (
@@ -180,8 +225,9 @@ export const Users = () => {
       </Box>
 
       <Grid container spacing={2} className={styles.parentGrid}>
-        {filteredData.length > 0 ? (
-          filteredData.map((product, index) => (
+        {data?.pages.flatMap((page)=>page.products)?.length > 0 ? (
+          data?.pages
+          .flatMap((page)=>page.products).map((product, index) => (
             <Grid item xss={12} xs={12} sm={6} md={4} lg={3} className={styles.grid} key={index}>
               <Card
                 className={styles.card}
@@ -255,4 +301,4 @@ export const Users = () => {
     </Box>
     </ThemeProvider>
   );
-};
+});
