@@ -6,7 +6,7 @@ import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useDispatch, useSelector } from "react-redux";
-import { cartDecreaseItem, cartIncreaseItem, intializeCart } from "../redux/slice/cartSlice";
+import { cartDecreaseItem, cartIncreaseItem, intializeCart, removeItem } from "../redux/slice/cartSlice";
 
 export const Cart = () => {
   
@@ -64,6 +64,21 @@ export const Cart = () => {
     dispatch(cartDecreaseItem(res.data));
     }
   })
+
+  const removeMutation=useMutation({
+    mutationKey:["product_cartremove"],
+    mutationFn:(data)=>{
+      return  axios.post(
+        `${process.env.REACT_APP_BASEURL}/removeproduct`,
+          data,
+        {
+          withCredentials: true,
+        })
+    },
+    onSuccess:(res)=>{
+      dispatch(removeItem(res.data))
+    }
+  })
   const increaseItem = (id, actualPrice) => {
     
     const payload={
@@ -83,6 +98,12 @@ export const Cart = () => {
       decreaseMutation.mutate(payload);
     };
 
+    const removecartItem=(item)=>{
+      const payload={
+        id:item?.id,
+      }
+      removeMutation.mutate(payload);
+    }
   return (
     <Box sx={{minHeight:"84vh",marginTop:'30px'}}>
       <Grid container spacing={2}>
@@ -194,7 +215,11 @@ export const Cart = () => {
                 >
                   <RemoveIcon />
                 </Button>
+                <Typography variant="body1" color="text.secondary" sx={{fontSize:'1.2rem',cursor:"pointer"}}
+                onClick={(e)=>removecartItem(item)}
+                >Remove</Typography>
               </Box>
+              
             </Box>
             <CardMedia
               component="img"

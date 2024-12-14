@@ -27,10 +27,18 @@ const cartSlice = createSlice({
           return acc + Number(item.price) * Number(item.count);
         },0);
     },
-    
+    removeItem:(state,action)=>{
+       
+      state.cart=state.cart.filter((item)=>Number(item.id)!==Number(action.payload.cartItem.id));
+
+      state.Total = parseFloat(
+        (state.Total - Number(action.payload.cartItem.actualPrice)*Number(action.payload.cartItem.count)).toFixed(2)
+      );
+
+      state.cart_length-=1;
+    },
     cartIncreaseItem: (state, action) => {
       
-     
       state.cart = state.cart.map((item) =>
         Number(item.id) === Number(action.payload.cartItem.id)
           ? {
@@ -52,7 +60,7 @@ const cartSlice = createSlice({
     
     cartDecreaseItem: (state, action) => {
       console.log("Action Payload:", action.payload);
-      state.cart_length-=1;
+      
       state.cart = state.cart
         .map((item) => {
           if (String(item.id) === String(action.payload.cartItem.id)) {
@@ -66,7 +74,7 @@ const cartSlice = createSlice({
                 ),
               };
             } else {
-            
+              state.cart_length-=1;
               return undefined;
             }
           }
@@ -89,7 +97,7 @@ const cartSlice = createSlice({
   },
 });
 
-export const {searchProduct,addToCart1,initializeCartLength,intializeCart, addCart, cartIncreaseItem, cartDecreaseItem } =
+export const {removeItem,searchProduct,addToCart1,initializeCartLength,intializeCart, addCart, cartIncreaseItem, cartDecreaseItem } =
   cartSlice.actions;
 
 export default cartSlice.reducer;

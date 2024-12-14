@@ -24,3 +24,9 @@
     margin-bottom: 15%;
     
 }
+.btn{
+    border-radius: 7px !important;
+    width: 270px;
+    padding:12px !important;
+    background-color:black !important;
+}

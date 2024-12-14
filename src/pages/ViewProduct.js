@@ -25,7 +25,6 @@ import {
 
 
     useEffect(()=>{
-  
       window.scrollTo(0,0);
     },[id]);
     
@@ -80,17 +79,19 @@ import {
     if(isError|| error1) return <Navigate to='/error'/>
   
     const addToCart = async (data) => {
-        
+
+      if(data===undefined)return;
+
          const payload=
             {
               id: id,
               count: 1,
-              title: data.title,
-              image: data.image,
-              category: data.category,
-              actualPrice: data.price,
-              price: data.price,
-              description: data.description,
+              title: data?.title,
+              image: data?.image,
+              category: data?.category,
+              actualPrice: data?.price,
+              price: data?.price,
+              description: data?.description,
             }
             mutation.mutate(payload);
             dispatch(addToCart1());
@@ -199,7 +200,7 @@ import {
               </Typography>
               <Button
                 variant="contained"
-                sx={{ borderRadius: 4, padding: 2, my: 2 }}
+                sx={{ borderRadius: 4, padding: 2, my: 2,backgroundColor:"black" }}
                 disabled={data?.ids?.map(String).includes(result?.id?.toString())}
                 onClick={(e)=>addToCart(result)}
               >

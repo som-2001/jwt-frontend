@@ -88,6 +88,7 @@ import {
                       )}
                     </Typography>
                     <Button
+                      className={styles.btn}
                       variant="contained"
                       sx={{ borderRadius: 5 }}
                       onClick={(e) => ViewProduct(data?.category, data?.id)}
