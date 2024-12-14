@@ -19,7 +19,7 @@ import { addToCart1 } from "../redux/slice/cartSlice";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 
-export const ProductDetailsCard = ({ id, refetch, data }) => {
+export const ProductDetailsCard = ({ id, refetch, data,viewProductLoading }) => {
   const dispatch = useDispatch();
 
   const { data: result, isLoading: load, isError } = useQuery({
@@ -170,10 +170,10 @@ export const ProductDetailsCard = ({ id, refetch, data }) => {
               backgroundColor: "black",
               width: "160px",
             }}
-            disabled={data?.ids?.map(String).includes(result?.id?.toString())}
+            disabled={mutation.isPending || load || mutation.isSuccess || data?.ids?.map(String).includes(result?.id?.toString())}
             onClick={(e) => addToCart(result)}
           >
-            {mutation.isPending || load ? (
+            {mutation.isPending || load  ? (
               <CircularProgress size={30} />
             ) : (
               <span

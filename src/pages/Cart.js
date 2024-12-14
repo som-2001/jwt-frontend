@@ -1,4 +1,4 @@
-import { Box, Button, Card, CardContent, CardMedia, Divider, Grid, Typography } from "@mui/material";
+import { Box, Button, Card, CardContent, CardMedia,  Divider, Grid, Typography } from "@mui/material";
 import styles from "../styles/Cart.module.css";
 import axios from "axios";
 import { useEffect } from "react";
@@ -222,6 +222,7 @@ export const Cart = () => {
                   <RemoveIcon />
                 </Button>
                 <Button sx={{backgroundColor:"black"}}
+                disabled={removeMutation.isPending}
                 onClick={(e)=>removecartItem(item)}
                 >
                   <RemoveShoppingCartIcon sx={{color:"white"}}/>

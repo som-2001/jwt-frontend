@@ -18,7 +18,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
-export const RenderCards = ({ product, data1, refetch,viewProductLoading }) => {
+export const RenderCards = ({ product, data1, refetch }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -122,7 +122,7 @@ export const RenderCards = ({ product, data1, refetch,viewProductLoading }) => {
                 ? styles.active
                 : styles.btn1
             }
-            disabled={data1?.ids?.map(String).includes(product?.id?.toString())}
+            disabled={mutation.isSuccess || mutation.isPending || data1?.ids?.map(String).includes(product?.id?.toString())}
             onClick={(e) => addToCart(product)}
           >
             <ShoppingCartIcon sx={{ marginLeft: "5px" }} />

@@ -45,7 +45,7 @@ export const ViewProduct = () => {
   return (
     <Box>
       <ToastContainer/>
-      <ProductDetailsCard id={id} refetch={refetch} data={data}/>
+      <ProductDetailsCard id={id} refetch={refetch} data={data} />
       <Box>
         <Typography variant="h6" align="center" sx={{ padding: "20px" }}>
           Similar products you may interested in
