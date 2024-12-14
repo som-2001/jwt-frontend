@@ -170,7 +170,7 @@ export const ProductDetailsCard = ({ id, refetch, data,viewProductLoading }) => 
               backgroundColor: "black",
               width: "160px",
             }}
-            disabled={mutation.isPending || load || mutation.isSuccess || data?.ids?.map(String).includes(result?.id?.toString())}
+            disabled={mutation.isPending || load || data?.ids?.map(String).includes(result?.id?.toString())}
             onClick={(e) => addToCart(result)}
           >
             {mutation.isPending || load  ? (

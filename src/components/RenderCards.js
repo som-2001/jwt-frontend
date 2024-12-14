@@ -122,7 +122,7 @@ export const RenderCards = ({ product, data1, refetch }) => {
                 ? styles.active
                 : styles.btn1
             }
-            disabled={mutation.isSuccess || mutation.isPending || data1?.ids?.map(String).includes(product?.id?.toString())}
+            disabled={mutation.isPending || data1?.ids?.map(String).includes(product?.id?.toString())}
             onClick={(e) => addToCart(product)}
           >
             <ShoppingCartIcon sx={{ marginLeft: "5px" }} />
