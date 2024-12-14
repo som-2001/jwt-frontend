@@ -9,6 +9,24 @@
     align-items:center;
     flex-direction:column
 }
+.loader{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    min-height:50vh
+}
+.addToCart::before{
+    content:"ADD TO CART"
+}
+.addToCart1::after{
+ content:"ADDED TO CART"
+}
+.parentGrid{
+   display: flex;
+    justify-content: center !important;
+    align-items: center !important;
+}
+
 .childGrid3{
     display:flex;
     justify-content:flex-start;

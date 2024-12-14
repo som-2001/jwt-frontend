@@ -7,6 +7,8 @@ import RemoveIcon from "@mui/icons-material/Remove";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useDispatch, useSelector } from "react-redux";
 import { cartDecreaseItem, cartIncreaseItem, intializeCart, removeItem } from "../redux/slice/cartSlice";
+import RemoveShoppingCartIcon from '@mui/icons-material/RemoveShoppingCart';
+import { toast, ToastContainer } from "react-toastify";
 
 export const Cart = () => {
   
@@ -76,6 +78,7 @@ export const Cart = () => {
         })
     },
     onSuccess:(res)=>{
+      toast.success("Product has been removed successfully.")
       dispatch(removeItem(res.data))
     }
   })
@@ -106,6 +109,7 @@ export const Cart = () => {
     }
   return (
     <Box sx={{minHeight:"84vh",marginTop:'30px'}}>
+      <ToastContainer/>
       <Grid container spacing={2}>
         <Grid item xs={12} lg={6} sx={{ marginTop: "20px" }}>
           <Typography variant="h5" sx={{ marginLeft: "40px" }}>
@@ -206,18 +210,22 @@ export const Cart = () => {
                 <Button
                   variant="contained"
                   onClick={(e) => increaseItem(item?.id, item?.actualPrice)}
+                  sx={{backgroundColor:"black"}}
                 >
                   <AddIcon />
                 </Button>
                 <Button
                   variant="contained"
                   onClick={(e) => decreaseItem(item?.id, item?.actualPrice)}
+                  sx={{backgroundColor:"black"}}
                 >
                   <RemoveIcon />
                 </Button>
-                <Typography variant="body1" color="text.secondary" sx={{fontSize:'1.2rem',cursor:"pointer"}}
+                <Button sx={{backgroundColor:"black"}}
                 onClick={(e)=>removecartItem(item)}
-                >Remove</Typography>
+                >
+                  <RemoveShoppingCartIcon sx={{color:"white"}}/>
+                </Button>
               </Box>
               
             </Box>

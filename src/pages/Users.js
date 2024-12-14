@@ -11,6 +11,7 @@ import {createTheme,ThemeProvider} from '@mui/material';
 import {useDispatch, useSelector} from 'react-redux';
 import { searchProduct} from '../redux/slice/cartSlice.js';
 import { ProductList } from "../components/ProductList.js";
+import { ToastContainer } from "react-toastify";
 
 export const Users = React.memo(() => {
  
@@ -41,6 +42,7 @@ export const Users = React.memo(() => {
 
   return (
     <ThemeProvider theme={theme}>
+       <ToastContainer/>
     <Box className={styles.parent}>
       <Box className={styles.search}>
         <Typography

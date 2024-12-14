@@ -117,6 +117,7 @@ export const ProductList = ({ focusRef }) => {
                   product={product}
                   data1={data1}
                   refetch={refetch}
+                 
                 />
               </Grid>
             ))
