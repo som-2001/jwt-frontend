@@ -3,4 +3,27 @@
     justify-content: space-between;
     align-items: center;
     padding: 10px;
-  }
+}
+.parentBox{
+    margin: 20px 0px 20px 0px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center
+}
+.childBox{
+  display: flex;
+  margin: 20px 0px 20px 0px;
+  justify-content: space-between;
+  max-width: 100%
+}
+.childContainer{
+  display: flex;
+  flex-direction: column;
+  flex: 1
+}
+.Box{
+  min-height: 84vh;
+  margin-top: 30px
+}
