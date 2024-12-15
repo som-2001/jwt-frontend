@@ -19,7 +19,7 @@ import { addToCart1 } from "../redux/slice/cartSlice";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 
-export const ProductDetailsCard = ({ id, refetch, data,viewProductLoading }) => {
+export const ProductDetailsCard = ({ id, refetch, data }) => {
   const dispatch = useDispatch();
 
   const { data: result, isLoading: load, isError } = useQuery({
@@ -38,7 +38,7 @@ export const ProductDetailsCard = ({ id, refetch, data,viewProductLoading }) => 
       });
     },
     onSuccess: () => {
-      toast.success("Product has been added sucessfully.")  
+      toast.success("Product has been added sucessfully.");
       refetch();
     },
     onError: (error) => {
@@ -61,12 +61,11 @@ export const ProductDetailsCard = ({ id, refetch, data,viewProductLoading }) => 
     mutation.mutate(payload);
     dispatch(addToCart1());
   };
-  if (isError) return <Navigate to="/error" />;
+  if (isError) return <Navigate to="/signin" />;
 
   return (
     <Grid container spacing={2} sx={{ padding: { xs: "0px", md: "67px" } }}>
       <Grid item xs={12} lg={5} className={styles.childGrid1}>
-       
         {load ? (
           <Skeleton
             variant="rectangular"
@@ -93,8 +92,11 @@ export const ProductDetailsCard = ({ id, refetch, data,viewProductLoading }) => 
               <Chip icon={<StarIcon />} label={result?.rating?.rate} />
             </Stack>
             <Typography variant="body2">
-              {9.5 * result?.rating?.count} Ratings & {result?.rating?.count}{" "}
-              Reviews
+              {result?.rating?.count
+                ? `${9.5 * result.rating.count} Ratings & ${
+                    result.rating.count
+                  } Reviews`
+                : "No Ratings & Reviews"}
             </Typography>
           </Box>
           <Typography variant="body2" color="red" sx={{ my: 1 }}>
@@ -170,10 +172,14 @@ export const ProductDetailsCard = ({ id, refetch, data,viewProductLoading }) => 
               backgroundColor: "black",
               width: "160px",
             }}
-            disabled={mutation.isPending || load || data?.ids?.map(String).includes(result?.id?.toString())}
+            disabled={
+              mutation.isPending ||
+              load ||
+              data?.ids?.map(String).includes(result?.id?.toString())
+            }
             onClick={(e) => addToCart(result)}
           >
-            {mutation.isPending || load  ? (
+            {mutation.isPending || load ? (
               <CircularProgress size={30} />
             ) : (
               <span
@@ -182,9 +188,7 @@ export const ProductDetailsCard = ({ id, refetch, data,viewProductLoading }) => 
                     ? styles.addToCart1
                     : styles.addToCart
                 }
-              >
-              
-              </span>
+              ></span>
             )}
           </Button>
         </Box>

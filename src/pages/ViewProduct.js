@@ -6,7 +6,7 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import styles from "../styles/ViewProduct.module.css";
-import { Navigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import {useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { RenderCards } from "../components/RenderCards.js";
@@ -21,10 +21,13 @@ export const ViewProduct = () => {
   }, [id]);
 
   const { data: result1, isError: error1,isLoading } = useQuery({
-    queryKey: ["DetailsByCategory", category],
+    queryKey: ["DetailsByCategory", category,id],
     queryFn: () => {
       return axios.get(
-        `https://fakestoreapi.com/products/category/${category}`
+        `${process.env.REACT_APP_BASEURL}/products/category?category=${category}&id=${id}`
+        ,{
+          withCredentials:true
+        }
       );
     },
     select: (data) => data.data,
@@ -40,7 +43,7 @@ export const ViewProduct = () => {
     select: (data) => data.data,
   });
 
-  if (error1) return <Navigate to="/error" />;
+  if (error1) return <h1>Error...</h1>;
 
   return (
     <Box>
