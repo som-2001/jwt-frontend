@@ -17,7 +17,7 @@ export const Users = React.memo(() => {
  
   const {search}=useSelector(state=>state.cart);
   const inputRef=useRef(null);
-  const focusRef=useRef(null);
+
  
   const dispatch=useDispatch();
 
@@ -56,7 +56,7 @@ export const Users = React.memo(() => {
         <TextField
           type="text"
           placeholder="Search something..."
-          inputRef={focusRef}
+         
           value={search}
           sx={{ width: { xs: "200px", sm: "400px" } }}
           InputProps={{
@@ -70,7 +70,7 @@ export const Users = React.memo(() => {
         />
       </Box>
 
-      <ProductList focusRef={focusRef}/>
+      <ProductList />
       
     </Box>
     </ThemeProvider>

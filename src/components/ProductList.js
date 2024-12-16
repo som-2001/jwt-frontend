@@ -22,7 +22,7 @@ function useDebouncedValue(value, delay) {
   return debouncedValue;
 }
 
-export const ProductList = ({ focusRef }) => {
+export const ProductList = () => {
   const { search } = useSelector((state) => state.cart);
   const debouncedInput = useDebouncedValue(search, 500);
   const loadMoreRef = useRef(null);
