@@ -18,6 +18,11 @@ import { Navigate } from "react-router-dom";
 import { addToCart1 } from "../redux/slice/cartSlice";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
+import { loadStripe } from "@stripe/stripe-js";
+const stripePromise = loadStripe(
+  "pk_test_51QWXfvLb3aUo71xgdOauGZjPsBlMEkSVGpqtU3ztLogxpXep93fVmMU9nJKjcJOttfpjj4jWecs8xxnDldQQkORk00kN4nBy9K"
+);
+const stripe = await stripePromise;
 
 export const ProductDetailsCard = ({ id, refetch, data }) => {
   const dispatch = useDispatch();
@@ -61,6 +66,25 @@ export const ProductDetailsCard = ({ id, refetch, data }) => {
     mutation.mutate(payload);
     dispatch(addToCart1());
   };
+
+  const buy=async(item)=>{
+
+      try {
+        const response = await axios.post(`${process.env.REACT_APP_BASEURL}/create-checkout-session`,{image:item.image,description:item.description,title:item.title,price:item.price},{
+          withCredentials:true
+        });
+        const session = response.data; 
+        console.log(response.data);
+  
+        const result = await stripe.redirectToCheckout({ sessionId: session.id });
+  
+        if (result.error) {
+          console.error(result.error.message);
+        }
+      } catch (error) {
+        console.error("Error creating checkout session:", error);
+      }
+  }
   if (isError) return <Navigate to="/signin" />;
 
   return (
@@ -165,13 +189,8 @@ export const ProductDetailsCard = ({ id, refetch, data }) => {
           </Typography>
           <Button
             variant="contained"
-            sx={{
-              borderRadius: 4,
-              padding: 2,
-              my: 2,
-              backgroundColor: "black",
-              width: "160px",
-            }}
+            sx={{bgcolor:"black"}}
+            className={styles.btn}
             disabled={
               mutation.isPending ||
               load ||
@@ -189,6 +208,18 @@ export const ProductDetailsCard = ({ id, refetch, data }) => {
                     : styles.addToCart
                 }
               ></span>
+            )}
+          </Button>
+          <Button
+            variant="contained"
+            sx={{bgcolor:"black"}}
+            className={styles.btn1}
+            onClick={(e) => buy(result)}
+          >
+            {mutation.isPending || load ? (
+              <CircularProgress size={30} />
+            ) : (
+              <span>Buy</span>
             )}
           </Button>
         </Box>

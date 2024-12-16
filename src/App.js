@@ -5,6 +5,8 @@ import {Protected} from './pages/Protected.js'
 import {Users} from './pages/Users.js'
 import { ViewProduct } from './pages/ViewProduct.js';
 import { Cart } from './pages/Cart.js';
+import { Success } from './pages/Success.js';
+import { Error } from './pages/Error.js';
 
 function App() {
   return (
@@ -16,6 +18,8 @@ function App() {
           <Route path='users' element={<Users/>} />
           <Route path='viewproduct/:id/:category' element={<ViewProduct/>} />
           <Route path="cart" element={<Cart/>}/>
+          <Route path="success" element={<Success/>}/>
+          <Route path="cancel" element={<Error/>}/>
         </Route> 
       </Routes>
     </BrowserRouter>

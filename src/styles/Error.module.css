@@ -1,0 +1,40 @@
+.container {
+    text-align: center;
+    font-family: 'Arial, sans-serif';
+    height: 80vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+.heading {
+    color: red;
+    font-size: 2rem !important;
+   
+    
+  }
+  .message{
+    color: #555;
+    font-size: 1.2rem
+  }
+  .list{
+   
+    padding: 0;
+    font-size: rem;
+    margin: 20px 0
+  }
+  .link{
+    color: #007bff;
+    text-decoration: none
+  }
+  .footer{
+    margin-top: 30px;
+    color: #777,
+  }
+  .btn{
+    border-radius: 10px !important;
+    padding: 20px !important;
+    width: 160px;
+    background-color: black;
+    color:white;
+}

@@ -46,3 +46,17 @@
     margin-bottom: 15%;
     
 }
+.btn{
+     border-radius: 10px !important;
+     padding: 20px !important;
+     margin: 10px 0px 10px 0px !important;
+     width: 160px;
+     margin-right: 20px !important;
+}
+.btn1{
+    border-radius: 10px !important;
+    padding: 20px !important;
+    margin: 10px 0px 10px 0px !important;
+    width: 160px;
+   
+}
