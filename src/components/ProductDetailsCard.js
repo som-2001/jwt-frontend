@@ -116,7 +116,7 @@ export const ProductDetailsCard = ({ id, refetch, data }) => {
         ) : (
           <CardMedia
             component="img"
-            src={result.image}
+            src={result?.image}
             sx={{ width: { xs: "300px", md: "400px" }, objectFit: "contain" }}
             className={styles.image}
           />
@@ -125,7 +125,7 @@ export const ProductDetailsCard = ({ id, refetch, data }) => {
       <Grid item xs={12} lg={7} className={styles.childGrid2}>
         <Box sx={{ width: { xs: "300px", sm: "500px", lg: "700px" } }}>
           <Typography variant="h6" color="text.secondary">
-            {load ? <Skeleton animation="wave" /> : result.title}
+            {load ? <Skeleton animation="wave" /> : result?.title}
           </Typography>
           <Box className={styles.childGrid3}>
             <Stack direction="row">
@@ -133,8 +133,8 @@ export const ProductDetailsCard = ({ id, refetch, data }) => {
             </Stack>
             <Typography variant="body2">
               {result?.rating?.count
-                ? `${9.5 * result.rating.count} Ratings & ${
-                    result.rating.count
+                ? `${9.5 * result?.rating?.count} Ratings & ${
+                    result?.rating?.count
                   } Reviews`
                 : "No Ratings & Reviews"}
             </Typography>
@@ -174,7 +174,7 @@ export const ProductDetailsCard = ({ id, refetch, data }) => {
             {load ? (
               <Skeleton animation="wave" height={90} />
             ) : (
-              result.description
+              result?.description
             )}
           </Typography>
           <Box className={styles.childGrid3}>
@@ -182,7 +182,7 @@ export const ProductDetailsCard = ({ id, refetch, data }) => {
               {load ? (
                 <Skeleton animation="wave" width={40} />
               ) : (
-                `$${result.price}`
+                `$${result?.price}`
               )}
             </Typography>
             <Typography
@@ -193,7 +193,7 @@ export const ProductDetailsCard = ({ id, refetch, data }) => {
               {load ? (
                 <Skeleton animation="wave" width={50} />
               ) : (
-                `$${(1.5 * result.price).toFixed(2)}`
+                `$${(1.5 * result?.price).toFixed(2)}`
               )}
             </Typography>
             <Typography variant="body2" color="text.secondary">
@@ -201,14 +201,14 @@ export const ProductDetailsCard = ({ id, refetch, data }) => {
             </Typography>
           </Box>
           <Typography variant="body1" color="text.secondary">
-            {load ? <Skeleton animation="wave" width={90} /> : result.category}
+            {load ? <Skeleton animation="wave" width={90} /> : result?.category}
           </Typography>
           <Button
             variant="contained"
             sx={{ bgcolor: "black" }}
             className={styles.btn}
             disabled={
-              mutation.isPending ||
+              mutation?.isPending ||
               load ||
               data?.ids?.map(String).includes(result?.id?.toString())
             }

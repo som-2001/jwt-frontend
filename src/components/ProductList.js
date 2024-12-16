@@ -45,8 +45,8 @@ export const ProductList = () => {
       return response.data;
     },
     getNextPageParam: (lastPage, pages) => {
-      if (lastPage.totalPages > pages.length) {
-        return pages.length + 1;
+      if (lastPage?.totalPages > pages?.length) {
+        return pages?.length + 1;
       }
       return undefined;
     },
@@ -100,10 +100,10 @@ export const ProductList = () => {
   return (
     <Box sx={{ width: "99vw" }}>
       <Grid container spacing={2} className={styles.parentGrid}>
-        {data?.pages.flatMap((page) => page.products)?.length > 0 ? (
+        {data?.pages?.flatMap((page) => page?.products)?.length > 0 ? (
           data?.pages
-            .flatMap((page) => page.products)
-            .map((product, index) => (
+            ?.flatMap((page) => page?.products)
+            ?.map((product, index) => (
               <Grid
                 item
                 xs={12}

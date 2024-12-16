@@ -178,8 +178,8 @@ export const Cart = () => {
                   >
                     <CardContent sx={{ flex: "1 0 auto" }}>
                       <Typography component="div" variant="h5">
-                        {item?.title.length > 50
-                          ? `${item?.title.slice(0, 30)}...`
+                        {item?.title?.length > 50
+                          ? `${item?.title?.slice(0, 30)}...`
                           : item?.title}
                       </Typography>
                       <Typography
@@ -204,7 +204,7 @@ export const Cart = () => {
                           component="div"
                           sx={{ color: "green" }}
                         >
-                          ${(item?.actualPrice * item.count).toFixed(2)}
+                          ${(item?.actualPrice * item?.count).toFixed(2)}
                         </Typography>
 
                         <Typography

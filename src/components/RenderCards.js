@@ -42,12 +42,12 @@ export const RenderCards = ({ product, data1, refetch }) => {
     const payload = {
       id: String(data.id),
       count: 1,
-      title: data.title,
-      image: data.image,
-      category: data.category,
-      actualPrice: data.price,
-      price: data.price,
-      description: data.description,
+      title: data?.title,
+      image: data?.image,
+      category: data?.category,
+      actualPrice: data?.price,
+      price: data?.price,
+      description: data?.description,
     };
     mutation.mutate(payload);
     dispatch(addToCart1());
@@ -81,20 +81,20 @@ export const RenderCards = ({ product, data1, refetch }) => {
       <CardContent sx={{ flexGrow: 1, backgroundColor: "#f9f9f8" }}>
         <Typography variant="h6" component="div" gutterBottom>
           {product?.title?.length > 20
-            ? `${product.title.substring(0, 20)}...`
-            : product.title}
+            ? `${product?.title?.substring(0, 20)}...`
+            : product?.title}
         </Typography>
 
         <Box className={styles.gap}>
-          <Chip label={product.category} />
+          <Chip label={product?.category} />
           <Typography variant="h6" color="green">
-            ${product.price}
+            ${product?.price}
           </Typography>
         </Box>
         <Typography variant="body2" color="text.secondary" paragraph>
           {product?.description?.length > 70
-            ? `${product.description.substring(0, 70)}...`
-            : product.description}
+            ? `${product?.description?.substring(0, 70)}...`
+            : product?.description}
         </Typography>
 
         <Box sx={{ marginBottom: "20px" }}>
@@ -110,7 +110,7 @@ export const RenderCards = ({ product, data1, refetch }) => {
           <Button
             variant="contained"
             className={styles.btn}
-            onClick={(e) => handleNavigate(product.id, product.category)}
+            onClick={(e) => handleNavigate(product?.id, product?.category)}
           >
             View
           </Button>
