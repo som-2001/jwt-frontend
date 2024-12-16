@@ -25,7 +25,11 @@ const stripe = await stripePromise;
 export const ProductDetailsCard = ({ id, refetch, data }) => {
   const dispatch = useDispatch();
 
-  const { data: result, isLoading: load, isError } = useQuery({
+  const {
+    data: result,
+    isLoading: load,
+    isError,
+  } = useQuery({
     queryKey: ["productById", id],
     queryFn: () => {
       return axios.get(`https://fakestoreapi.com/products/${id}`);
@@ -65,24 +69,38 @@ export const ProductDetailsCard = ({ id, refetch, data }) => {
     dispatch(addToCart1());
   };
 
-  const buy=async(item)=>{
-
-      try {
-        const response = await axios.post(`${process.env.REACT_APP_BASEURL}/create-checkout-session`,{image:item.image,description:item.description,title:item.title,price:item.price},{
-          withCredentials:true
-        });
-        const session = response.data; 
-        console.log(response.data);
-  
-        const result = await stripe.redirectToCheckout({ sessionId: session.id });
-  
-        if (result.error) {
-          console.error(result.error.message);
+  const ProductMutation = useMutation({
+    mutationKey: ["buyproduct"],
+    mutationFn: async (item) => {
+      const response = await axios.post(
+        `${process.env.REACT_APP_BASEURL}/create-checkout-session`,
+        {
+          image: item.image,
+          description: item.description,
+          title: item.title,
+          price: item.price,
+        },
+        {
+          withCredentials: true,
         }
-      } catch (error) {
-        console.error("Error creating checkout session:", error);
+      );
+
+      const session = response.data;
+      const result = await stripe.redirectToCheckout({ sessionId: session.id });
+
+      if (result.error) {
+        console.error(result.error.message);
       }
-  }
+    },
+    onError: (error) => {
+      console.log(error.message);
+    },
+  });
+
+  const buy = (item) => {
+    ProductMutation.mutate(item);
+  };
+  
   if (isError) return <Navigate to="/signin" />;
 
   return (
@@ -187,7 +205,7 @@ export const ProductDetailsCard = ({ id, refetch, data }) => {
           </Typography>
           <Button
             variant="contained"
-            sx={{bgcolor:"black"}}
+            sx={{ bgcolor: "black" }}
             className={styles.btn}
             disabled={
               mutation.isPending ||
@@ -210,12 +228,12 @@ export const ProductDetailsCard = ({ id, refetch, data }) => {
           </Button>
           <Button
             variant="contained"
-            sx={{bgcolor:"black"}}
+            sx={{ bgcolor: "black" }}
             className={styles.btn1}
             onClick={(e) => buy(result)}
           >
-            {mutation.isPending || load ? (
-              <CircularProgress size={30} />
+            {ProductMutation.isPending ? (
+              <CircularProgress size={25} />
             ) : (
               <span>Buy</span>
             )}

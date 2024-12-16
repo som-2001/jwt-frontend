@@ -4,6 +4,7 @@ import {
   Card,
   CardContent,
   CardMedia,
+  CircularProgress,
   Divider,
   Grid,
   Typography,
@@ -23,6 +24,9 @@ import {
 } from "../redux/slice/cartSlice";
 import RemoveShoppingCartIcon from "@mui/icons-material/RemoveShoppingCart";
 import { toast, ToastContainer } from "react-toastify";
+import { loadStripe } from "@stripe/stripe-js";
+const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLIC_KEY);
+const stripe = await stripePromise;
 
 export const Cart = () => {
   const { cart, Total } = useSelector((state) => state.cart);
@@ -87,6 +91,30 @@ export const Cart = () => {
       dispatch(removeItem(res.data));
     },
   });
+
+  const CartMutation = useMutation({
+    mutationKey: ["cart"],
+    mutationFn: async () => {
+   
+        const response = await axios.post(
+          `${process.env.REACT_APP_BASEURL}/create-cart-checkout-session`,{price:Total},
+          {
+            withCredentials: true,
+          }
+        );
+  
+        const session = response.data;
+        const result = await stripe.redirectToCheckout({ sessionId: session.id });
+  
+        if (result.error) {
+          console.error(result.error.message);
+        }
+      },
+    onError: (error) => {
+      console.log(error.message);
+    },
+  });
+
   const increaseItem = (id, actualPrice) => {
     const payload = {
       id: id,
@@ -108,6 +136,10 @@ export const Cart = () => {
       id: item?.id,
     };
     removeMutation.mutate(payload);
+  };
+
+  const CartProceed = () => {
+    CartMutation.mutate();
   };
   return (
     <Box className={styles.Box}>
@@ -259,6 +291,13 @@ export const Cart = () => {
             </Box>
             <Button>${Math.abs(Total.toFixed(2))}</Button>
           </Box>
+          <Typography
+            className={styles.btn}
+            align="center"
+            onClick={CartProceed}
+          >
+            {CartMutation.isPending ? <CircularProgress size={20}/>:<span>Checkout to Proceed</span>}
+          </Typography>
         </Grid>
       </Grid>
     </Box>

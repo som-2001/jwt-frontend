@@ -27,3 +27,12 @@
   min-height: 84vh;
   margin-top: 30px
 }
+.btn{
+    border-radius: 10px !important;
+    padding: 12px !important;
+    width: 230px;
+    background-color: black !important;
+    color:white !important;
+    margin-left: 50px !important;
+    cursor: pointer;
+}
