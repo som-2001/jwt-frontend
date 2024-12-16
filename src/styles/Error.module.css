@@ -35,6 +35,6 @@
     border-radius: 10px !important;
     padding: 20px !important;
     width: 160px;
-    background-color: black;
-    color:white;
+    background-color: black !important;
+    color:white !important;
 }

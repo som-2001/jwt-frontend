@@ -19,9 +19,7 @@ import { addToCart1 } from "../redux/slice/cartSlice";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import { loadStripe } from "@stripe/stripe-js";
-const stripePromise = loadStripe(
-  "pk_test_51QWXfvLb3aUo71xgdOauGZjPsBlMEkSVGpqtU3ztLogxpXep93fVmMU9nJKjcJOttfpjj4jWecs8xxnDldQQkORk00kN4nBy9K"
-);
+const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLIC_KEY);
 const stripe = await stripePromise;
 
 export const ProductDetailsCard = ({ id, refetch, data }) => {
