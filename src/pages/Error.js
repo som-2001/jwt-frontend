@@ -13,7 +13,7 @@ export const Error = () => {
         Oops! 
       </Typography>
       <Typography color="text.secondary" sx={{ mt: 2 }}>
-        Something went wrong!! Try after some time later.
+        Something went wrong!! Try after some time .
       </Typography>
 
       <Typography variant="body1" color="text.secondary">

@@ -97,7 +97,7 @@ export const Cart = () => {
     mutationFn: async () => {
    
         const response = await axios.post(
-          `${process.env.REACT_APP_BASEURL}/create-cart-checkout-session`,{price:Total},
+          `${process.env.REACT_APP_BASEURL}/create-cart-checkout-session`,{cart,price:Total},
           {
             withCredentials: true,
           }
