@@ -59,6 +59,31 @@ export const Navbar = () => {
     },
     onSuccess: () => {
       localStorage.setItem("auth", false);
+
+        // Clear Stripe-related cookies
+        document.cookie.split(";").forEach((cookie) => {
+          const [key] = cookie.split("=");
+          if (key.trim().startsWith("__stripe")) {
+            document.cookie = `${key}=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/;`;
+          }
+        });
+      
+        // Clear Stripe-related localStorage
+        Object.keys(localStorage).forEach((key) => {
+          if (key.startsWith("stripe") || key.startsWith("__stripe")) {
+            localStorage.removeItem(key);
+          }
+        });
+      
+        // Clear Stripe-related sessionStorage
+        Object.keys(sessionStorage).forEach((key) => {
+          if (key.startsWith("stripe") || key.startsWith("__stripe")) {
+            sessionStorage.removeItem(key);
+          }
+        });
+      
+        console.log("Stripe Link email and session data cleared.");
+      
       navigate("/signin");
     },
     onError: (error) => {

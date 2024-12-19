@@ -71,7 +71,9 @@ export const Signin = () => {
     },
     onSuccess: (user) => {
       toast.success("Login successful");
-      navigate("/users");
+      setTimeout(()=>{
+        navigate("/users")
+      },1500);
     },
     onError: (error) => {
       console.error("Login failed:", error);
@@ -93,7 +95,9 @@ export const Signin = () => {
     onSuccess: (user) => {
       console.log(user);
       toast.success("Login successful");
-      navigate("/users");
+      setTimeout(()=>{
+        navigate("/users")
+      },1500);
     },
     onError: (error) => {
       console.error("Login failed:", error);

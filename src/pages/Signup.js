@@ -83,7 +83,10 @@ export const Signup = () => {
       onSuccess: (user) => {
         console.log(user);
         toast.success("Registration successful");
-        navigate("/signin")
+        setTimeout(()=>{
+          navigate("/signin")
+        },1500);
+        
       },
       onError: (error) => {
         console.error("Registration failed:", error);
