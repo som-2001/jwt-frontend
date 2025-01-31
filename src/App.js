@@ -8,7 +8,7 @@ import { Cart } from './pages/Cart.js';
 import { Success } from './pages/Success.js';
 import { Error } from './pages/Error.js';
 
-function App() {
+function App() { 
   return (
     <BrowserRouter>
       <Routes>
